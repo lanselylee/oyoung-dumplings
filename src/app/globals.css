@@ -1,27 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Inter:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary:   #D92B2B;
+  --color-secondary: #F5A623;
+  --color-bg:        #FFF8F0;
+  --color-text:      #1A1A1A;
+  --color-muted:     #6B6B6B;
+  --color-surface:   #FFFFFF;
+  --color-border:    #E8D5C0;
+  --color-success:   #2E7D32;
+  --color-error:     #C62828;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+@layer components {
+  .btn-primary {
+    @apply bg-[#D92B2B] text-white font-medium px-6 py-3 rounded-xl
+           hover:bg-[#B52222] active:scale-95 transition-all duration-150
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-[#F5A623] text-white font-medium px-6 py-3 rounded-xl
+           hover:bg-[#D4911A] active:scale-95 transition-all duration-150;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[#D92B2B] text-[#D92B2B] font-medium px-6 py-3 rounded-xl
+           hover:bg-[#D92B2B] hover:text-white active:scale-95 transition-all duration-150;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-[#E8D5C0] p-4;
+  }
+
+  .input {
+    @apply w-full border border-[#E8D5C0] rounded-xl px-4 py-3 text-sm
+           focus:outline-none focus:ring-2 focus:ring-[#D92B2B] focus:border-transparent
+           bg-white placeholder:text-[#6B6B6B];
+  }
+
+  .badge-gold {
+    @apply bg-[#F5A623] text-white text-xs font-bold px-2 py-0.5 rounded-full;
+  }
+
+  .badge-red {
+    @apply bg-[#D92B2B] text-white text-xs font-bold px-2 py-0.5 rounded-full;
   }
 }
