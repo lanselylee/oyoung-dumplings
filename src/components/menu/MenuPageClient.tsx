@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { ShoppingCart, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useCartStore } from '@/store/cart'
 import { applyDiscount } from '@/lib/discount'
@@ -14,7 +14,7 @@ interface Props {
   tiers: DiscountTier[]
 }
 
-export default function MenuPageClient({ locale, items, tiers }: Props) {
+export default function MenuPageClient({ locale, items }: Props) {
   const t = useTranslations()
   const addItem = useCartStore(s => s.addItem)
   const groupOrderId = useCartStore(s => s.groupOrderId)

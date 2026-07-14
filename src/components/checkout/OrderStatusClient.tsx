@@ -6,7 +6,6 @@ import { CheckCircle, MapPin, Package } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { Order } from '@/types'
 
-const STATUS_ORDER = ['pending', 'paid', 'preparing', 'ready', 'fulfilled'] as const
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-gray-200 text-gray-600',
   paid: 'bg-[#F5A623] text-white',
