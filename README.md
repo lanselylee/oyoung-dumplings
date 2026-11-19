@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# O'Young Dumplings · 团购点餐
 
-## Getting Started
+A bilingual (中文 / English) group-buy ordering site for a Chinese restaurant in the US. Customers join a
+group order for a pickup location; the more people join before it closes, the bigger everyone's discount.
 
-First, run the development server:
+## How it works
+
+1. **Join a group.** Each pickup location has an open group order with a deadline and a share link.
+2. **Order and authorize.** Checkout authorizes the full price with Stripe (`capture_method: manual`); no money
+   is taken yet.
+3. **Close the group.** A Vercel cron job calls `/api/groups/close` (protected by a secret). For each expired
+   group it looks up the discount tier reached by the number of people, then **captures each payment at the
+   discounted amount**. Customers only ever pay the final group price, and nobody needs a refund.
+4. **Notify.** Order confirmations and new-order alerts go out through Resend; the restaurant follows orders on an admin dashboard.
+
+The discount ladder (seeded as 3 people → 5%, 5 → 10%, 10 → 20% off) lives in the database, so the restaurant can change it without a
+deploy. The group page shows the current tier, the next tier, and the time left.
+
+## Stack
+
+| Part | Tool |
+|---|---|
+| App | Next.js 14 (App Router), TypeScript, Tailwind CSS |
+| Data | Supabase (Postgres), schema and seed menu in `supabase/migrations/` |
+| Payments | Stripe PaymentIntents with manual capture, webhook for payment status |
+| Email | Resend |
+| i18n | next-intl, `messages/zh.json` and `messages/en.json` (Chinese by default) |
+| State | Zustand cart, Zod validation |
+| Hosting | Vercel, with a daily cron to close groups |
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local   # fill in Supabase, Stripe and Resend keys
+npm install
+npm run dev                        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run `supabase/migrations/000_run_all.sql` in the Supabase SQL editor to create the tables and seed the menu.
